@@ -1,0 +1,14 @@
+
+version: '3.8'
+
+services:
+  redis:
+    image: redis:latest         # Redis 이미지 (최신 버전 사용)
+    container_name: my_redis    # 컨테이너 이름
+    ports:
+      - "6379:6379"             # 호스트와 컨테이너 포트를 매핑
+    volumes:
+      - redis_data:/data        # Redis 데이터가 유지되도록 볼륨 설정
+
+volumes:
+  redis_data:

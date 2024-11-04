@@ -16,8 +16,20 @@ func main() {
 
 	ping, err := client.Ping(context.Background()).Result()
 	if err != nil {
-		log.Fatal("redis connection error : ", err )
+		log.Fatal("redis connection error : ", err)
 	}
 
 	log.Println(ping)
+
+	err = client.Set(context.Background(), "name", "홍길동", 0).Err()
+	if err != nil {
+		log.Fatal("redis can not set the value : ", err)
+	}
+
+	name, err := client.Get(context.Background(), "name").Result()
+	if err != nil {
+		log.Fatal("redis can not found the key value : ", err)
+	}
+
+	log.Printf("result %s", name)
 }

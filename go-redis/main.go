@@ -3,9 +3,11 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 
 	"github.com/go-redis/redis/v8"
+	"github.com/google/uuid"
 )
 
 func main() {
@@ -20,6 +22,8 @@ func main() {
 		Age   int    `json:age`
 		Email string `json:email`
 	}
+	personID := uuid.NewString()
+	personKey := fmt.Sprintf("person:%s", personID)
 
 	jsonString, err := json.Marshal(&Person{
 		Name:  "홍길동",
@@ -38,12 +42,12 @@ func main() {
 
 	log.Println(ping)
 
-	err = client.Set(context.Background(), "person", jsonString, 0).Err()
+	err = client.Set(context.Background(), personKey, jsonString, 0).Err()
 	if err != nil {
 		log.Fatal("redis can not set the value : ", err)
 	}
 
-	person, err := client.Get(context.Background(), "person").Result()
+	person, err := client.Get(context.Background(), personKey).Result()
 	if err != nil {
 		log.Fatal("redis can not found the key value : ", err)
 	}

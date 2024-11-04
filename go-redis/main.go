@@ -18,6 +18,7 @@ func main() {
 	})
 
 	type Person struct {
+		ID    string `json:id`
 		Name  string `json:name`
 		Age   int    `json:age`
 		Email string `json:email`
@@ -26,6 +27,7 @@ func main() {
 	personKey := fmt.Sprintf("person:%s", personID)
 
 	jsonString, err := json.Marshal(&Person{
+		ID:    personID,
 		Name:  "홍길동",
 		Age:   20,
 		Email: "example.com",

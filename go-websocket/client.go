@@ -37,6 +37,20 @@ func (c *Client) readMessages() {
 		c.manager.removeClient(c)
 	}()
 
+	// ping-pong 데드라인 설정
+	// writeMessage 에서 ping 을 보냈을때 pongWait 시간내 pong 이 readMessage 에 도착하지 않는 경우
+	// websocket 연결을 종료한다.
+	if err := c.connection.SetReadDeadline(time.Now().Add(pongWait)); err != nil {
+		log.Println()
+		return
+	}
+
+	// 메시지 크기 제한 설정
+	c.connection.SetReadLimit(512)
+
+	// ping-pong 이 정상적으로 이루어질 경우
+	c.connection.SetPongHandler(c.pongHandler)
+
 	for {
 		_, payload, err := c.connection.ReadMessage()
 
@@ -108,4 +122,10 @@ func (c *Client) writeMessages() {
 			}
 		}
 	}
+}
+
+// ping-pong 이 정상적으로 연결 되었을 경우 ping-pong 타이머를 초기화
+func (c *Client) pongHandler(pongMsg string) error {
+	log.Println("pong")
+	return c.connection.SetReadDeadline(time.Now().Add(pongWait))
 }

@@ -42,3 +42,22 @@ func (m *Manager) serveWS(w http.ResponseWriter, r *http.Request) {
 
 	conn.Close()
 }
+
+func (m *Manager) addClient(client *Client) {
+	m.Lock()
+	defer m.Unlock()
+
+	// client connection status turn true
+	m.clients[client] = true
+}
+
+func (m *Manager) removeCliet(client *Client) {
+	m.Lock()
+	defer m.Unlock()
+
+	if _, ok := m.clients[client]; ok {
+		client.connection.Close()
+		delete(m.clients, client)
+		log.Println("Client disconnected")
+	}
+}

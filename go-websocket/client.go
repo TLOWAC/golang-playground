@@ -49,3 +49,31 @@ func (c *Client) readMessages() {
 
 	}
 }
+
+func (c *Client) writeMessages() {
+	defer func() {
+		c.manager.removeClient(c)
+	}()
+
+	for {
+		select {
+		case message, ok := <-c.egress:
+			// egress channel is closed
+			if !ok {
+				// send close message to client
+				if err := c.connection.WriteMessage(websocket.CloseMessage, nil); err != nil {
+					log.Println("connection closed: ", err)
+				}
+				return
+			}
+
+			// send text message to client
+			if err := c.connection.WriteMessage(websocket.TextMessage, message); err != nil {
+				// if error occured print error message
+				log.Printf("failed to send message: %v", err)
+			}
+
+			log.Println("message sent")
+		}
+	}
+}

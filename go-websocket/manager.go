@@ -70,6 +70,14 @@ func (m *Manager) routeEvent(event Event, c *Client) error {
 }
 
 func (m *Manager) serveWS(w http.ResponseWriter, r *http.Request) {
+
+	otp := r.URL.Query().Get("otp")
+
+	if otp == "" || !m.otps.VerifyOTP(otp) {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
 	log.Println("New Connection")
 
 	// upgrade regular http connection into websocket connection.

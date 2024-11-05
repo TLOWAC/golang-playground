@@ -1,9 +1,15 @@
 package main
 
-import "net/http"
+import (
+	"context"
+	"net/http"
+)
 
 func main() {
-	manager := NewManager()
-	http.HandleFunc("/ws", manager.serveWS)
 
+	ctx := context.Background()
+
+	manager := NewManager(ctx)
+	http.HandleFunc("/ws", manager.serveWS)
+	http.HandleFunc("/login", manager.loginHandler)
 }

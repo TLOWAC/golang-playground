@@ -51,7 +51,7 @@ func (m *Manager) addClient(client *Client) {
 	m.clients[client] = true
 }
 
-func (m *Manager) removeCliet(client *Client) {
+func (m *Manager) removeClient(client *Client) {
 	m.Lock()
 	defer m.Unlock()
 

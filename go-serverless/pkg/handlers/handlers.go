@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"module/pkg/user"
 	"net/http"
 
 	"github.com/aws/aws-lambda-go/events"

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"module/pkg/handlers"
 	"os"
 
 	"github.com/aws/aws-lambda-go/events"

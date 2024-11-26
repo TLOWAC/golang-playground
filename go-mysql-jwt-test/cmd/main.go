@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	db, err := db.NewMySQLStorage(mysql.Config{
+	mysql, err := db.NewMySQLStorage(mysql.Config{
 		User:                 config.Env.DBUser,
 		Passwd:               config.Env.DBPassword,
 		Addr:                 config.Env.DBAddress,
@@ -23,7 +23,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	server := api.NewAPISever(":8080", db)
+	db.InitMySQLStorage(mysql)
+
+	server := api.NewAPISever(":8080", mysql)
 	if err := server.Run(); err != nil {
 		log.Fatal(err)
 	}
